@@ -27,7 +27,19 @@ async function run() {
     await client.connect();
     // database collection
     const articleCollection= client.db("newDb").collection("articles");
-
+    const MyArticleCollection= client.db("newDb").collection("myArticle");
+    // my article collection..
+    app.post('/myArticle',async(req,res)=>{
+        const ArticleItem=req.body;
+        const result= await MyArticleCollection.insertOne(ArticleItem);
+        res.send(result);
+    })
+    app.get('/myArticle', async(req,res)=>{
+        const email=req.query.email;
+        const query={email: email}
+        const result= await MyArticleCollection.find(query).toArray();
+        res.send(result);
+    })
    // get data for article
    app.get('/articles', async(req, res)=>{
     const result= await articleCollection.find().toArray();
